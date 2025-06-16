@@ -1,0 +1,8 @@
+{
+  "realm": "mern-realm",
+  "auth-server-url": "http://localhost:5173/",
+  "ssl-required": "external",
+  "resource": "mern-client",
+  "public-client": true,
+  "confidential-port": 0
+}
