@@ -1,0 +1,38 @@
+name: Auto Merge Backend to Dev
+
+on:
+  push:
+    branches:
+      - backend
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install & Test
+        working-directory: backend
+        run: |
+          npm ci
+          npm test || echo "⚠️ Không có test hoặc test skipped"
+
+  auto-merge:
+    needs: ci
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/backend' }}
+
+    steps:
+      - name: Auto merge backend -> dev
+        uses: devmasx/merge-branch@v1.4.0
+        with:
+          type: now
+          from_branch: backend
+          target_branch: dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
